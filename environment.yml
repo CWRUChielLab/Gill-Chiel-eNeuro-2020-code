@@ -1,0 +1,28 @@
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - git
+  - ipywidgets
+  - matplotlib >=3.1
+  - nbdime       # optional: nbdime extensions --enable
+  - nbstripout   # optional: nbstripout --install
+  - neurotic >=1.4.0
+  - notebook
+  - numpy
+  - pandas
+  - pip
+  - python >=3.6
+  - python-neo >=0.8.0
+  - quantities
+  - r-effsize >= 0.7.8
+  - r-irkernel
+  - r-rrcov
+  - rpy2 <3.1.0  # version 3.1.0 build for Windows is broken
+  - scipy
+  - seaborn
+  - statsmodels
+  - tqdm
+  - pip:
+    - elephant >=0.6.2
+    - pylttb
