@@ -1,0 +1,789 @@
+# ===  GLOBAL PARAMETERS  ======================================================
+
+neurotic_config:
+
+    # prepended to remote_data_dir unless remote_data_dir is already a full URL
+    remote_data_root: https://gin.g-node.org/jpgill86/Gill-Chiel-eNeuro-2020-data/raw/master
+
+    # these aliases are not officially part of the neurotic spec, but are
+    # instead a feature of the YAML language, and nesting them under
+    # neurotic_config ensures neurotic will not mistake them for a dataset
+    aliases:
+        colors:
+            - &color-B38    'EFBF46' # yellow
+            - &color-I2     'DC5151' # red
+            - &color-B8     'DA8BC3' # pink
+            - &color-B6B9   '64B5CD' # light blue
+            - &color-B3B6B9 '5A9BC5' # medium blue
+            - &color-B3     '4F80BD' # dark blue
+            - &color-B4B5   '00A86B' # jade green
+            - &color-traces '666666' # dark gray
+
+        epoch_encoder_possible_labels: &epoch_encoder_possible_labels
+            - B38 activity
+            - I2 protraction activity
+            - B8 activity
+            - B3/6/9/10 activity
+            - B4/B5 activity
+            - Inward movement
+            - Force shoulder end
+            - Force rise start
+            - Force plateau start
+            - Force plateau end
+            - Force drop end
+
+        filters: &filters
+            - channel: I2
+              lowpass: 100 # Hz
+        filters-JG07: &filters-JG07 # I2 channel was named differently for JG07
+            - channel: I2-L
+              lowpass: 100 # Hz
+
+        burst_detectors: &burst_detectors  # used only if fast loading is off (lazy=False)
+            - &burst_detectors-B38
+              spiketrain: B38
+              thresholds: [8, 5] # Hz, based on McManus et al. 2014
+            - &burst_detectors-I2
+              spiketrain: I2
+              thresholds: [10, 5] # Hz, same as Cullins et al. 2015a (based on Hurwitz et al. 1996)
+            - &burst_detectors-B8
+              spiketrain: B8a/b
+              thresholds: [3, 3] # Hz, same as Cullins et al. 2015a (based on Morton and Chiel 1993a)
+            - &burst_detectors-B6B9
+              spiketrain: B6/B9
+              thresholds: [10, 5] # Hz, based on Lu et al. 2015
+            - &burst_detectors-B3
+              spiketrain: B3
+              thresholds: [8, 2] # Hz, based on Lu et al. 2015
+            - &burst_detectors-B4B5
+              spiketrain: B4/B5
+              thresholds: [3, 3] # Hz, same as Cullins et al. 2015a ? (Table 1 says 3 Hz, text says first/last spike; based on Warman and Chiel 1995 ?)
+
+# ===  DATA SETS  ==============================================================
+
+# ---  ANIMAL 1  ---------------------------------------------------------------
+
+Animal 1 Unloaded 1:
+    description: 'JG07 2018-05-20 002 [1169, 1191]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 1 Unloaded 1
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 1 Unloaded 1
+    data_file:          Animal 1 Unloaded 1.axgx
+    video_file:         Animal 1 Unloaded 1.mp4
+    annotations_file:   Animal 1 Unloaded 1 Annotations.csv
+    epoch_encoder_file: Animal 1 Unloaded 1 Epoch Encoder.csv
+
+    video_offset: 1169 # sec
+
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+
+    plots: &plots-JG07
+        - channel: I2-L
+          ylim: [-30, 30] # uV
+          color: *color-traces
+        - channel: RN-L
+          ylim: [-60, 60] # uV
+          color: *color-traces
+        - channel: BN2-L
+          ylim: [-100, 100] # uV
+          color: *color-traces
+        - channel: BN3-L
+          ylim: [-80, 80] # uV
+          color: *color-traces
+        - channel: Force
+          ylim: [-10, 300] # mN
+          color: *color-traces
+
+    filters: *filters-JG07  # used only if fast loading is off (lazy=False)
+
+    amplitude_discriminators: &amplitude_discriminators-JG07  # used only if fast loading is off (lazy=False)
+        - name: B38
+          channel: BN2-L
+          units: uV
+          amplitude: [15, 30]
+          epoch: B38 activity
+          color: *color-B38
+        - name: I2
+          channel: I2-L
+          units: uV
+          amplitude: [2, 30]
+          epoch: I2 protraction activity
+          color: *color-I2
+        - name: B8a/b
+          channel: RN-L
+          units: uV
+          amplitude: [-40, -10]
+          epoch: B8 activity
+          color: *color-B8
+        - name: B6/B9
+          channel: BN2-L
+          units: uV
+          amplitude: [-40, -12]
+          epoch: B3/6/9/10 activity
+          color: *color-B6B9
+        - name: B3
+          channel: BN2-L
+          units: uV
+          amplitude: [40, 100]
+          epoch: B3/6/9/10 activity
+          color: *color-B3
+        - name: B4/B5
+          channel: BN3-L
+          units: uV
+          amplitude: [50, 120]
+          epoch: B4/B5 activity
+          color: *color-B4B5
+
+    burst_detectors: &burst_detectors-JG07  # used only if fast loading is off (lazy=False)
+        - *burst_detectors-B38
+        - *burst_detectors-I2
+        - spiketrain: B8a/b
+          thresholds: [2, 2] # Hz, both thresholds reduced for this animal because B8a/b signal was weak with few spikes
+        - *burst_detectors-B6B9
+        - *burst_detectors-B3
+        - *burst_detectors-B4B5
+
+Animal 1 Unloaded 2:
+    description: 'JG07 2018-05-20 002 [1495, 1518]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 1 Unloaded 2
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 1 Unloaded 2
+    data_file:          Animal 1 Unloaded 2.axgx
+    video_file:         Animal 1 Unloaded 2.mp4
+    annotations_file:   Animal 1 Unloaded 2 Annotations.csv
+    epoch_encoder_file: Animal 1 Unloaded 2 Epoch Encoder.csv
+
+    video_offset: 1495 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG07
+
+    filters: *filters-JG07  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG07  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors-JG07  # used only if fast loading is off (lazy=False)
+
+Animal 1 Unloaded 3:
+    description: 'JG07 2018-05-20 002 [1581, 1615]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 1 Unloaded 3
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 1 Unloaded 3
+    data_file:          Animal 1 Unloaded 3.axgx
+    video_file:         Animal 1 Unloaded 3.mp4
+    annotations_file:   Animal 1 Unloaded 3 Annotations.csv
+    epoch_encoder_file: Animal 1 Unloaded 3 Epoch Encoder.csv
+
+    video_offset: 1581 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG07
+
+    filters: *filters-JG07  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG07  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors-JG07  # used only if fast loading is off (lazy=False)
+
+Animal 1 Loaded 1:
+    description: 'JG07 2018-05-20 002 [2716, 2755]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 1 Loaded 1
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 1 Loaded 1
+    data_file:          Animal 1 Loaded 1.axgx
+    video_file:         Animal 1 Loaded 1.mp4
+    annotations_file:   Animal 1 Loaded 1 Annotations.csv
+    epoch_encoder_file: Animal 1 Loaded 1 Epoch Encoder.csv
+
+    video_offset: 2716 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG07
+
+    filters: *filters-JG07  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG07  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors-JG07  # used only if fast loading is off (lazy=False)
+
+# ---  ANIMAL 2  ---------------------------------------------------------------
+
+Animal 2 Unloaded 1:
+    description: 'JG08 2018-06-21 002 [ 256,  287]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 2 Unloaded 1
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 2 Unloaded 1
+    data_file:          Animal 2 Unloaded 1.axgx
+    video_file:         Animal 2 Unloaded 1.mp4
+    annotations_file:   Animal 2 Unloaded 1 Annotations.csv
+    epoch_encoder_file: Animal 2 Unloaded 1 Epoch Encoder.csv
+
+    video_offset: 256 # sec
+
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+
+    plots: &plots-JG08
+        - channel: I2
+          ylim: [-30, 30] # uV
+          color: *color-traces
+        - channel: RN
+          ylim: [-100, 100] # uV
+          color: *color-traces
+        - channel: BN2
+          ylim: [-150, 150] # uV
+          color: *color-traces
+        - channel: BN3
+          ylim: [-150, 150] # uV
+          color: *color-traces
+        - channel: Force
+          ylim: [-10, 300] # mN
+          color: *color-traces
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+
+    amplitude_discriminators: &amplitude_discriminators-JG08  # used only if fast loading is off (lazy=False)
+        - name: B38
+          channel: BN2
+          units: uV
+          amplitude: [17, 26]
+          epoch: B38 activity
+          color: *color-B38
+        - name: I2
+          channel: I2
+          units: uV
+          amplitude: [2, 75]
+          epoch: I2 protraction activity
+          color: *color-I2
+        - name: B8a/b
+          channel: RN
+          units: uV
+          amplitude: [-50, -12]
+          epoch: B8 activity
+          color: *color-B8
+        - name: B6/B9
+          channel: BN2
+          units: uV
+          amplitude: [-50, -30]
+          epoch: B3/6/9/10 activity
+          color: *color-B6B9
+        - name: B3
+          channel: BN2
+          units: uV
+          amplitude: [50, 150]
+          epoch: B3/6/9/10 activity
+          color: *color-B3
+        - name: B4/B5
+          channel: BN3
+          units: uV
+          amplitude: [50, 200]
+          epoch: B4/B5 activity
+          color: *color-B4B5
+
+    burst_detectors: &burst_detectors-JG08  # used only if fast loading is off (lazy=False)
+        - *burst_detectors-B38
+        - *burst_detectors-I2
+        - *burst_detectors-B8
+        - spiketrain: B6/B9
+          thresholds: [10, 3] # Hz, end threshold reduced for this animal
+        - *burst_detectors-B3
+        - *burst_detectors-B4B5
+
+Animal 2 Unloaded 2:
+    description: 'JG08 2018-06-21 002 [ 454,  481]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 2 Unloaded 2
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 2 Unloaded 2
+    data_file:          Animal 2 Unloaded 2.axgx
+    video_file:         Animal 2 Unloaded 2.mp4
+    annotations_file:   Animal 2 Unloaded 2 Annotations.csv
+    epoch_encoder_file: Animal 2 Unloaded 2 Epoch Encoder.csv
+
+    video_offset: 454 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG08
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG08  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors-JG08  # used only if fast loading is off (lazy=False)
+
+Animal 2 Loaded 1:
+    description: 'JG08 2018-06-21 002 [ 141,  210]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 2 Loaded 1
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 2 Loaded 1
+    data_file:          Animal 2 Loaded 1.axgx
+    video_file:         Animal 2 Loaded 1.mp4
+    annotations_file:   Animal 2 Loaded 1 Annotations.csv
+    epoch_encoder_file: Animal 2 Loaded 1 Epoch Encoder.csv
+
+    video_offset: 141 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG08
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG08  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors-JG08  # used only if fast loading is off (lazy=False)
+
+Animal 2 Loaded 2:
+    description: 'JG08 2018-06-21 002 [ 660,  701]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 2 Loaded 2
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 2 Loaded 2
+    data_file:          Animal 2 Loaded 2.axgx
+    video_file:         Animal 2 Loaded 2.mp4
+    annotations_file:   Animal 2 Loaded 2 Annotations.csv
+    epoch_encoder_file: Animal 2 Loaded 2 Epoch Encoder.csv
+
+    video_offset: 660 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG08
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG08  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors-JG08  # used only if fast loading is off (lazy=False)
+
+Animal 2 Loaded 3:
+    description: 'JG08 2018-06-21 002 [1448, 1477]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 2 Loaded 3
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 2 Loaded 3
+    data_file:          Animal 2 Loaded 3.axgx
+    video_file:         Animal 2 Loaded 3.mp4
+    annotations_file:   Animal 2 Loaded 3 Annotations.csv
+    epoch_encoder_file: Animal 2 Loaded 3 Epoch Encoder.csv
+
+    video_offset: 1448 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG08
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG08  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors-JG08  # used only if fast loading is off (lazy=False)
+
+# ---  ANIMAL 3  ---------------------------------------------------------------
+
+Animal 3 Unloaded 1:
+    description: 'JG11 2019-04-03 001 [1791, 1819]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 3 Unloaded 1
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 3 Unloaded 1
+    data_file:          Animal 3 Unloaded 1.axgx
+    video_file:         Animal 3 Unloaded 1.mp4
+    annotations_file:   Animal 3 Unloaded 1 Annotations.csv
+    epoch_encoder_file: Animal 3 Unloaded 1 Epoch Encoder.csv
+
+    video_offset: 1791 # sec
+
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+
+    plots: &plots-JG11
+        - channel: I2
+          ylim: [-30, 30] # uV
+          color: *color-traces
+        - channel: RN
+          ylim: [-30, 30] # uV
+          color: *color-traces
+        - channel: BN2
+          ylim: [-100, 100] # uV
+          color: *color-traces
+        - channel: BN3-PROX
+          ylim: [-100, 100] # uV
+          color: *color-traces
+        - channel: Force
+          ylim: [-10, 500] # mN
+          color: *color-traces
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+
+    amplitude_discriminators: &amplitude_discriminators-JG11  # used only if fast loading is off (lazy=False)
+        - name: B38
+          channel: BN2
+          units: uV
+          amplitude: [20, 50]
+          epoch: B38 activity
+          color: *color-B38
+        - name: I2
+          channel: I2
+          units: uV
+          amplitude: [2, 20]
+          epoch: I2 protraction activity
+          color: *color-I2
+        - name: B8a/b
+          channel: RN
+          units: uV
+          amplitude: [-30, -8]
+          epoch: B8 activity
+          color: *color-B8
+        - name: B6/B9
+          channel: BN2
+          units: uV
+          amplitude: [-60, -15]
+          epoch: B3/6/9/10 activity
+          color: *color-B6B9
+        - name: B3
+          channel: BN2
+          units: uV
+          amplitude: [-120, -60]
+          epoch: B3/6/9/10 activity
+          color: *color-B3
+        - name: B4/B5
+          channel: BN3-PROX
+          units: uV
+          amplitude: [70, 150]
+          epoch: B4/B5 activity
+          color: *color-B4B5
+
+    burst_detectors: &burst_detectors-JG11  # used only if fast loading is off (lazy=False)
+        - *burst_detectors-B38
+        - *burst_detectors-I2
+        - *burst_detectors-B8
+        - *burst_detectors-B6B9
+        - *burst_detectors-B3
+        - spiketrain: B4/B5
+          thresholds: [1.5, 1.5] # Hz, both thresholds reduced for this animal because only one neuron appeared to project
+
+Animal 3 Unloaded 2:
+    description: 'JG11 2019-04-03 004 [ 551,  568]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 3 Unloaded 2
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 3 Unloaded 2
+    data_file:          Animal 3 Unloaded 2.axgx
+    video_file:         Animal 3 Unloaded 2.mp4
+    annotations_file:   Animal 3 Unloaded 2 Annotations.csv
+    epoch_encoder_file: Animal 3 Unloaded 2 Epoch Encoder.csv
+
+    video_offset: 551 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG11
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG11  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors-JG11  # used only if fast loading is off (lazy=False)
+
+Animal 3 Loaded 1:
+    description: 'JG11 2019-04-03 004 [1226, 1280]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 3 Loaded 1
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 3 Loaded 1
+    data_file:          Animal 3 Loaded 1.axgx
+    video_file:         Animal 3 Loaded 1.mp4
+    annotations_file:   Animal 3 Loaded 1 Annotations.csv
+    epoch_encoder_file: Animal 3 Loaded 1 Epoch Encoder.csv
+
+    video_offset: 1226 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG11
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG11  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors-JG11  # used only if fast loading is off (lazy=False)
+
+# ---  ANIMAL 4  ---------------------------------------------------------------
+
+Animal 4 Unloaded 1:
+    description: 'JG12 2019-05-10 002 [ 147,  165]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 4 Unloaded 1
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 4 Unloaded 1
+    data_file:          Animal 4 Unloaded 1.axgx
+    video_file:         Animal 4 Unloaded 1.mp4
+    annotations_file:   Animal 4 Unloaded 1 Annotations.csv
+    epoch_encoder_file: Animal 4 Unloaded 1 Epoch Encoder.csv
+
+    video_offset: 147 # sec
+
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+
+    plots: &plots-JG12
+        - channel: I2
+          ylim: [-50, 50] # uV
+          color: *color-traces
+        - channel: RN
+          ylim: [-25, 25] # uV
+          color: *color-traces
+        - channel: BN2
+          ylim: [-45, 45] # uV
+          color: *color-traces
+        - channel: BN3-DIST
+          ylim: [-60, 60] # uV
+          color: *color-traces
+        - channel: Force
+          ylim: [-10, 500] # mN
+          color: *color-traces
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+
+    amplitude_discriminators: &amplitude_discriminators-JG12  # used only if fast loading is off (lazy=False)
+        - name: B38
+          channel: BN2
+          units: uV
+          amplitude: [7, 20]
+          epoch: B38 activity
+          color: *color-B38
+        - name: I2
+          channel: I2
+          units: uV
+          amplitude: [2, 75]
+          epoch: I2 protraction activity
+          color: *color-I2
+        - name: B8a/b
+          channel: RN
+          units: uV
+          amplitude: [-30, -8]
+          epoch: B8 activity
+          color: *color-B8
+        - name: B6/B9
+          channel: BN2
+          units: uV
+          amplitude: [-25, -9]
+          epoch: B3/6/9/10 activity
+          color: *color-B6B9
+        - name: B3
+          channel: BN2
+          units: uV
+          amplitude: [-60, -25]
+          epoch: B3/6/9/10 activity
+          color: *color-B3
+        - name: B4/B5
+          channel: BN3-DIST
+          units: uV
+          amplitude: [-80, -20]
+          epoch: B4/B5 activity
+          color: *color-B4B5
+
+    burst_detectors: *burst_detectors  # used only if fast loading is off (lazy=False)
+
+Animal 4 Unloaded 2:
+    description: 'JG12 2019-05-10 002 [ 228,  245]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 4 Unloaded 2
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 4 Unloaded 2
+    data_file:          Animal 4 Unloaded 2.axgx
+    video_file:         Animal 4 Unloaded 2.mp4
+    annotations_file:   Animal 4 Unloaded 2 Annotations.csv
+    epoch_encoder_file: Animal 4 Unloaded 2 Epoch Encoder.csv
+
+    video_offset: 228 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG12
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG12  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors  # used only if fast loading is off (lazy=False)
+
+Animal 4 Unloaded 3:
+    description: 'JG12 2019-05-10 002 [ 277,  291]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 4 Unloaded 3
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 4 Unloaded 3
+    data_file:          Animal 4 Unloaded 3.axgx
+    video_file:         Animal 4 Unloaded 3.mp4
+    annotations_file:   Animal 4 Unloaded 3 Annotations.csv
+    epoch_encoder_file: Animal 4 Unloaded 3 Epoch Encoder.csv
+
+    video_offset: 277 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG12
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG12  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors  # used only if fast loading is off (lazy=False)
+
+Animal 4 Loaded 1:
+    description: 'JG12 2019-05-10 002 [ 434,  465]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 4 Loaded 1
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 4 Loaded 1
+    data_file:          Animal 4 Loaded 1.axgx
+    video_file:         Animal 4 Loaded 1.mp4
+    annotations_file:   Animal 4 Loaded 1 Annotations.csv
+    epoch_encoder_file: Animal 4 Loaded 1 Epoch Encoder.csv
+
+    video_offset: 434 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG12
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG12  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors  # used only if fast loading is off (lazy=False)
+
+Animal 4 Loaded 2:
+    description: 'JG12 2019-05-10 002 [2897, 2937]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 4 Loaded 2
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 4 Loaded 2
+    data_file:          Animal 4 Loaded 2.axgx
+    video_file:         Animal 4 Loaded 2.mp4
+    annotations_file:   Animal 4 Loaded 2 Annotations.csv
+    epoch_encoder_file: Animal 4 Loaded 2 Epoch Encoder.csv
+
+    video_offset: 2897 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG12
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG12  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors  # used only if fast loading is off (lazy=False)
+
+Animal 4 Unloaded 2 Superset:
+    description: 'JG12 2019-05-10 002 [ 223.4,  261.4]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 4 Unloaded 2 Superset
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 4 Unloaded 2 Superset
+    data_file:          Animal 4 Unloaded 2 Superset.axgx
+    video_file:         Animal 4 Unloaded 2 Superset.mp4
+    annotations_file:   Animal 4 Unloaded 2 Superset Annotations.csv
+    epoch_encoder_file: Animal 4 Unloaded 2 Superset Epoch Encoder.csv
+
+    video_offset: 223.4 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG12
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG12  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors  # used only if fast loading is off (lazy=False)
+
+Animal 4 Loaded 2 Superset:
+    description: 'JG12 2019-05-10 002 [2875.3, 3039.3]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 4 Loaded 2 Superset
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 4 Loaded 2 Superset
+    data_file:          Animal 4 Loaded 2 Superset.axgx
+    video_file:         Animal 4 Loaded 2 Superset.mp4
+    annotations_file:   Animal 4 Loaded 2 Superset Annotations.csv
+    epoch_encoder_file: Animal 4 Loaded 2 Superset Epoch Encoder.csv
+
+    video_offset: 2875.3 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG12
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG12  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors  # used only if fast loading is off (lazy=False)
+
+# ---  ANIMAL 5  ---------------------------------------------------------------
+
+Animal 5 Unloaded 1:
+    description: 'JG14 2019-07-30 001 [1834, 1865]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 5 Unloaded 1
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 5 Unloaded 1
+    data_file:          Animal 5 Unloaded 1.axgx
+    video_file:         Animal 5 Unloaded 1.mp4
+    annotations_file:   Animal 5 Unloaded 1 Annotations.csv
+    epoch_encoder_file: Animal 5 Unloaded 1 Epoch Encoder.csv
+
+    video_offset: 1834 # sec
+
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+
+    plots: &plots-JG14
+        - channel: I2
+          ylim: [-30, 30] # uV
+          color: *color-traces
+        - channel: RN
+          ylim: [-30, 30] # uV
+          color: *color-traces
+        - channel: BN2
+          ylim: [-50, 50] # uV
+          color: *color-traces
+        - channel: BN3-PROX
+          ylim: [-60, 60] # uV
+          color: *color-traces
+        - channel: Force
+          ylim: [-10, 500] # mN
+          color: *color-traces
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+
+    amplitude_discriminators: &amplitude_discriminators-JG14  # used only if fast loading is off (lazy=False)
+        - name: B38
+          channel: BN2
+          units: uV
+          amplitude: [12, 25]
+          epoch: B38 activity
+          color: *color-B38
+        - name: I2
+          channel: I2
+          units: uV
+          amplitude: [1, 10]
+          epoch: I2 protraction activity
+          color: *color-I2
+        - name: B8a/b
+          channel: RN
+          units: uV
+          amplitude: [-15, -6]
+          epoch: B8 activity
+          color: *color-B8
+        - name: B6/B9
+          channel: BN2
+          units: uV
+          amplitude: [-30, -20]
+          epoch: B3/6/9/10 activity
+          color: *color-B6B9
+        - name: B3
+          channel: BN2
+          units: uV
+          amplitude: [-80, -30]
+          epoch: B3/6/9/10 activity
+          color: *color-B3
+        - name: B4/B5
+          channel: BN3-PROX
+          units: uV
+          amplitude: [-40, -13]
+          epoch: B4/B5 activity
+          color: *color-B4B5
+
+    burst_detectors: &burst_detectors-JG14  # used only if fast loading is off (lazy=False)
+        - *burst_detectors-B38
+        - *burst_detectors-I2
+        - *burst_detectors-B8
+        - spiketrain: B6/B9
+          thresholds: [4, 2] # Hz, both thresholds reduced for this animal because B6/B9 always fired slowly
+        - *burst_detectors-B3
+        - *burst_detectors-B4B5
+
+Animal 5 Unloaded 2:
+    description: 'JG14 2019-07-30 001 [1909, 1943]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 5 Unloaded 2
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 5 Unloaded 2
+    data_file:          Animal 5 Unloaded 2.axgx
+    video_file:         Animal 5 Unloaded 2.mp4
+    annotations_file:   Animal 5 Unloaded 2 Annotations.csv
+    epoch_encoder_file: Animal 5 Unloaded 2 Epoch Encoder.csv
+
+    video_offset: 1909 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG14
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG14  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors-JG14  # used only if fast loading is off (lazy=False)
+
+Animal 5 Unloaded 3:
+    description: 'JG14 2019-07-30 001 [2049, 2084]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 5 Unloaded 3
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 5 Unloaded 3
+    data_file:          Animal 5 Unloaded 3.axgx
+    video_file:         Animal 5 Unloaded 3.mp4
+    annotations_file:   Animal 5 Unloaded 3 Annotations.csv
+    epoch_encoder_file: Animal 5 Unloaded 3 Epoch Encoder.csv
+
+    video_offset: 2049 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG14
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG14  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors-JG14  # used only if fast loading is off (lazy=False)
+
+Animal 5 Loaded 1:
+    description: 'JG14 2019-07-29 004 [ 828,  870]'
+
+    data_dir:           Gill-Chiel-eNeuro-2020-data/Animal 5 Loaded 1
+    remote_data_dir:    Gill-Chiel-eNeuro-2020-data/Animal 5 Loaded 1
+    data_file:          Animal 5 Loaded 1.axgx
+    video_file:         Animal 5 Loaded 1.mp4
+    annotations_file:   Animal 5 Loaded 1 Annotations.csv
+    epoch_encoder_file: Animal 5 Loaded 1 Epoch Encoder.csv
+
+    video_offset: 828 # sec
+    epoch_encoder_possible_labels: *epoch_encoder_possible_labels
+    plots: *plots-JG14
+
+    filters: *filters  # used only if fast loading is off (lazy=False)
+    amplitude_discriminators: *amplitude_discriminators-JG14  # used only if fast loading is off (lazy=False)
+    burst_detectors: *burst_detectors-JG14  # used only if fast loading is off (lazy=False)
