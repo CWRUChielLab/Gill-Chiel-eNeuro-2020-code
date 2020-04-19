@@ -3,6 +3,7 @@
 Tools for working with Neo objects
 """
 
+
 import numpy as np
 import neo
 from pylttb import lttb
