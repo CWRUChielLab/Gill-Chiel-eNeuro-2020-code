@@ -1,0 +1,57 @@
+-----------------------------------------
+FIGURE 2C: Inward movement start to next inward movement start (s)
+
+Food              Unloaded              Loaded
+            Mean ± SEM (N)      Mean ± SEM (N)
+Animal                                        
+1       5.45 ± 0.50 (4)     6.91 ± 0.07 (4)   
+2       5.97 ± 0.58 (4)     7.48 ± 0.31 (12)  
+3       4.76 ± 0.28 (4)     7.80 ± 0.64 (4)   
+4       4.65 ± 0.16 (3)     6.39 ± 0.13 (7)   
+5       6.48 ± 0.32 (6)     6.99 ± 0.82 (4)   
+
+Difference of means, Mean ± SEM (N): 1.65 ± 0.41 (5)
+Proportional change, Mean ± SEM (N): 32% ± 9% (5)
+
+Shapiro-Wilk, W = 0.93, p = 0.58 (n.s.)
+Paired t-test, t(4) = 4.078, p = 0.008 (sig.)
+Cohen's d = 2.45
+
+-----------------------------------------
+FIGURE 2D: Inward movement duration (s)
+
+Food              Unloaded              Loaded
+            Mean ± SEM (N)      Mean ± SEM (N)
+Animal                                        
+1       1.35 ± 0.22 (4)     3.00 ± 0.27 (5)   
+2       2.83 ± 0.21 (4)     3.55 ± 0.11 (15)  
+3       2.02 ± 0.15 (4)     2.80 ± 0.39 (5)   
+4       1.95 ± 0.21 (4)     2.75 ± 0.23 (9)   
+5       1.56 ± 0.09 (7)     2.68 ± 0.39 (5)   
+
+Difference of means, Mean ± SEM (N): 1.01 ± 0.17 (5)
+Proportional change, Mean ± SEM (N): 60% ± 17% (5)
+
+Shapiro-Wilk, W = 0.81, p = 0.10 (n.s.)
+Paired t-test, t(4) = 5.820, p = 0.002 (sig.)
+Cohen's d = 2.15
+
+-----------------------------------------
+FIGURE 2E: Inward movement end to next inward movement start (s)
+
+Food              Unloaded              Loaded
+            Mean ± SEM (N)      Mean ± SEM (N)
+Animal                                        
+1       4.10 ± 0.32 (4)     3.83 ± 0.36 (4)   
+2       3.15 ± 0.45 (4)     3.80 ± 0.31 (12)  
+3       2.74 ± 0.15 (4)     5.05 ± 0.79 (4)   
+4       2.78 ± 0.33 (3)     3.51 ± 0.15 (7)   
+5       4.89 ± 0.26 (6)     4.66 ± 0.76 (4)   
+
+Difference of means, Mean ± SEM (N): 0.64 ± 0.47 (5)
+Proportional change, Mean ± SEM (N): 24% ± 16% (5)
+
+Shapiro-Wilk, W = 0.87, p = 0.25 (n.s.)
+Paired t-test, t(4) = 1.361, p = 0.123 (n.s.)
+Cohen's d = 0.79
+
