@@ -1,6 +1,6 @@
 # Specific to this project
 Gill-Chiel-eNeuro-2020-data/
-figures/
+output/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
