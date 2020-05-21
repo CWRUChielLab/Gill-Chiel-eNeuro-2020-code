@@ -1,11 +1,11 @@
-Code for Gill & Chiel 2020: Rapid adaptation to changing mechanical load by ordered recruitment of identified motor neurons
+Code for Gill & Chiel 2020: Rapid Adaptation to Changing Mechanical Load by Ordered Recruitment of Identified Motor Neurons
 ===========================================================================================================================
 
 |Binder badge|
 
 This repository holds code that performs analyses and generates figures published in
 
-    Gill, J. P., & Chiel, H. J. (2020). Rapid adaptation to changing mechanical load by ordered recruitment of identified motor neurons. eNeuro. https://doi.org/10.1523/ENEURO.0016-20.2020
+    Gill, J. P., & Chiel, H. J. (2020). Rapid Adaptation to Changing Mechanical Load by Ordered Recruitment of Identified Motor Neurons. eNeuro, 7(3). https://doi.org/10.1523/ENEURO.0016-20.2020
 
 Data for this publication used by this code is stored in a sister repository on GIN: https://gin.g-node.org/jpgill86/Gill-Chiel-eNeuro-2020-data
 
